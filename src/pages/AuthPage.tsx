@@ -87,7 +87,7 @@ export default function AuthPage({ onNavigate }: AuthPageProps) {
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-800"
-                  placeholder="John Doe"
+                  placeholder="Your Name"
                 />
               </div>
             )}
@@ -102,7 +102,7 @@ export default function AuthPage({ onNavigate }: AuthPageProps) {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-800"
-                placeholder="you@example.com"
+                placeholder="Your Email Address"
               />
             </div>
 
