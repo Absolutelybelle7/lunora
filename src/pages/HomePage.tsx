@@ -3,10 +3,7 @@ import {
   ArrowRight,
   ArrowLeft,
   Play,
-  Truck,
-  RotateCcw,
-  Shield,
-  Star,
+   Star,
   Heart,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
