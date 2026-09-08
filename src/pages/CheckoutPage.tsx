@@ -82,7 +82,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="theme-page min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Please Sign In</h2>
           <p className="text-gray-600 mb-6">You need to be signed in to checkout</p>
@@ -98,10 +98,10 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="theme-page min-h-screen bg-gray-50">
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Checkout</h1>
+          <h1 className="heading-serif text-4xl font-semibold text-gray-900 mb-2">Checkout</h1>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <button onClick={() => onNavigate('home')} className="hover:text-emerald-800">Home</button>
             <span>/</span>

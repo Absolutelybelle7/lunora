@@ -41,10 +41,10 @@ export default function CartPage({ onNavigate }: CartPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="theme-page min-h-screen bg-cream">
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Shopping Cart</h1>
+          <h1 className="heading-serif text-4xl font-semibold text-gray-900 mb-2">Shopping Cart</h1>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <button onClick={() => onNavigate('home')} className="hover:text-black">Home</button>
             <span>/</span>

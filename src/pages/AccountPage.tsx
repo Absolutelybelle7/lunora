@@ -3,17 +3,43 @@ import { User, Package, Heart, MapPin, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { mockProducts } from '../lib/mockData';
 import { formatPrice } from '../lib/currency';
+import type { Product } from '../types';
 
 interface AccountPageProps {
   onNavigate: (page: string) => void;
 }
 
+interface Profile {
+  full_name?: string;
+  phone?: string;
+  loyalty_points?: number;
+}
+
+interface StoredUser extends Profile {
+  id: string;
+  email: string;
+}
+
+interface AccountOrder {
+  id: string;
+  order_number: string;
+  status: string;
+  total: number;
+  created_at: string;
+}
+
+interface WishlistRecord {
+  id: string;
+  product_id: string;
+  products: Product;
+}
+
 export default function AccountPage({ onNavigate }: AccountPageProps) {
   const { user, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
-  const [profile, setProfile] = useState<any>(null);
-  const [orders, setOrders] = useState<any[]>([]);
-  const [wishlist, setWishlist] = useState<any[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [orders, setOrders] = useState<AccountOrder[]>([]);
+  const [wishlist, setWishlist] = useState<WishlistRecord[]>([]);
 
   useEffect(() => {
     if (!user) {
@@ -27,24 +53,24 @@ export default function AccountPage({ onNavigate }: AccountPageProps) {
 
   const loadProfile = async () => {
     if (!user) return;
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const userData = users.find((u: any) => u.id === user.id);
+    const users = JSON.parse(localStorage.getItem('users') || '[]') as StoredUser[];
+    const userData = users.find((storedUser) => storedUser.id === user.id);
     setProfile(userData || { full_name: user.user_metadata?.full_name, loyalty_points: 0 });
   };
 
   const loadOrders = async () => {
     if (!user) return;
-    const ordersData = JSON.parse(localStorage.getItem(`orders_${user.id}`) || '[]');
+    const ordersData = JSON.parse(localStorage.getItem(`orders_${user.id}`) || '[]') as AccountOrder[];
     setOrders(ordersData);
   };
 
   const loadWishlist = async () => {
     if (!user) return;
-    const wishlistData = JSON.parse(localStorage.getItem(`wishlist_${user.id}`) || '[]');
-    const enrichedWishlist = wishlistData.map((item: any) => {
-      const product = mockProducts.find(p => p.id === item.product_id);
+    const wishlistData = JSON.parse(localStorage.getItem(`wishlist_${user.id}`) || '[]') as Array<{ id: string; product_id: string }>;
+    const enrichedWishlist = wishlistData.map((item) => {
+      const product = mockProducts.find(p => p.id === item.product_id) as Product | undefined;
       return product ? { ...item, products: product } : null;
-    }).filter(Boolean);
+    }).filter((item): item is WishlistRecord => item !== null);
     setWishlist(enrichedWishlist);
   };
 
@@ -56,11 +82,11 @@ export default function AccountPage({ onNavigate }: AccountPageProps) {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="theme-page min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Account</h1>
+          <h1 className="heading-serif text-4xl font-semibold text-gray-900 mb-2">My Account</h1>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <button
               onClick={() => onNavigate('home')}

@@ -8,6 +8,15 @@ interface User {
   };
 }
 
+interface StoredUser extends User {
+  password: string;
+  full_name?: string;
+}
+
+interface AuthError {
+  message: string;
+}
+
 interface Session {
   user: User;
   access_token: string;
@@ -17,8 +26,8 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
+  signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+  signUp: (email: string, password: string, fullName: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -46,8 +55,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     // Mock sign in - just check if user exists in localStorage
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const foundUser = users.find((u: any) => u.email === email && u.password === password);
+    const users = JSON.parse(localStorage.getItem('users') || '[]') as StoredUser[];
+    const foundUser = users.find((storedUser) => storedUser.email === email && storedUser.password === password);
     
     if (!foundUser) {
       return { error: { message: 'Invalid credentials' } };
@@ -67,10 +76,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const users = JSON.parse(localStorage.getItem('users') || '[]') as StoredUser[];
     
     // Check if user already exists
-    if (users.find((u: any) => u.email === email)) {
+    if (users.find((storedUser) => storedUser.email === email)) {
       return { error: { message: 'User already exists' } };
     }
 

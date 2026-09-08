@@ -5,18 +5,21 @@ import { useCart } from '../context/CartContent';
 import ProductCard from '../components/ProductCard';
 import { mockProducts, mockReviews, mockCategories } from '../lib/mockData';
 import { formatPrice } from '../lib/currency';
+import type { Product, Review } from '../types';
 
 interface ProductDetailPageProps {
   productSlug: string;
   onNavigate: (page: string) => void;
 }
 
+type ProductWithCategory = Product & { categories?: { name: string } };
+
 export default function ProductDetailPage({ productSlug, onNavigate }: ProductDetailPageProps) {
   const { user } = useAuth();
   const { addToCart } = useCart();
-  const [product, setProduct] = useState<any>(null);
-  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [product, setProduct] = useState<ProductWithCategory | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -47,8 +50,8 @@ export default function ProductDetailPage({ productSlug, onNavigate }: ProductDe
   };
 
   const handleAddToCart = async () => {
-    if (!user) {
-      onNavigate('auth');
+    if (!user || !product) {
+      if (!user) onNavigate('auth');
       return;
     }
 
@@ -62,7 +65,7 @@ export default function ProductDetailPage({ productSlug, onNavigate }: ProductDe
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="theme-page min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-emerald-800 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -70,14 +73,14 @@ export default function ProductDetailPage({ productSlug, onNavigate }: ProductDe
 
   if (!product) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="theme-page min-h-screen flex items-center justify-center">
         <p className="text-gray-600">Product not found</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="theme-page min-h-screen bg-gray-50">
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -257,7 +260,7 @@ export default function ProductDetailPage({ productSlug, onNavigate }: ProductDe
 
           {activeTab === 'specifications' && (
             <div className="space-y-4">
-              {Object.entries(product.specifications || {}).map(([key, value]: [string, any]) => (
+              {Object.entries(product.specifications || {}).map(([key, value]) => (
                 <div key={key} className="flex border-b pb-2">
                   <span className="font-semibold text-gray-900 w-48 capitalize">{key.replace('_', ' ')}:</span>
                   <span className="text-gray-700">

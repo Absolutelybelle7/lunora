@@ -27,10 +27,10 @@ export default function SearchPage({ onNavigate, initialQuery }: SearchPageProps
   }, [debouncedQuery]);
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="theme-page min-h-screen bg-ivory">
       <div className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-semibold text-charcoal mb-2">Search</h1>
+          <h1 className="heading-serif text-4xl font-semibold text-charcoal mb-2">Search</h1>
           <p className="text-sm text-slate-500">Find the perfect piece from our luxury edit.</p>
         </div>
       </div>
@@ -38,7 +38,7 @@ export default function SearchPage({ onNavigate, initialQuery }: SearchPageProps
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-12">
           <div>
-            <h2 className="text-2xl font-bold text-charcoal">Search the collection</h2>
+            <h2 className="heading-serif text-2xl font-semibold text-charcoal">Search the collection</h2>
             <p className="text-slate-500">Try “silk”, “perfume”, or “evening dress”.</p>
           </div>
           <div className="w-full md:w-1/2">

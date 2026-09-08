@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
 import {
   ArrowRight,
+  ArrowLeft,
   Play,
   Truck,
   RotateCcw,
   Shield,
-  Headphones,
   Star,
   Heart,
-  ChevronLeft,
-  ChevronRight,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ScrollReveal from '../components/ScrollReveal';
@@ -23,9 +21,11 @@ import dress1 from '../assets/images/dress (1).jpg';
 import tops1 from '../assets/images/tops (1).jpg';
 import shoes1 from '../assets/images/shoes (1).jpg';
 import bag1 from '../assets/images/bag (1).jpg';
-import acc4 from '../assets/images/acc (4).jpg';
+import aac5 from '../assets/images/acc (5).jpg';
+import acc7 from '../assets/images/acc (7).jpg';
 import cover3 from '../assets/images/cover (3).jpg';
 import promo from '../assets/images/promo.jpg';
+import men1 from '../assets/images/men.jpg';
 
 
 
@@ -36,13 +36,13 @@ interface HomePageProps {
 
 const categoryCircles = [
   { label: 'Women', slug: 'women', image: cover1 },
-  { label: 'Men', slug: 'men', image: cover2 },
+  { label: 'Men', slug: 'men', image: men1 },
   { label: 'Dresses', slug: 'dresses', image: dress1 },
   { label: 'Tops', slug: 'tops', image: tops1 },
   { label: 'Shoes', slug: 'shoes', image: shoes1 },
   { label: 'Bags', slug: 'bags', image: bag1 },
-  { label: 'Accessories', slug: 'accessories', image: bag1 },
-  { label: 'Sale', slug: 'sale', image: acc4 },
+  { label: 'Accessories', slug: 'accessories', image: aac5 },
+  { label: 'Sale', slug: 'sale', image: acc7 },
 ];
 
 const shopCategories = [
@@ -54,7 +54,7 @@ const shopCategories = [
   {
     title: "Men's Collection",
     slug: 'men',
-    image: cover2,
+    image: men1,
   },
   {
     title: 'Dresses',
@@ -64,15 +64,8 @@ const shopCategories = [
   {
     title: 'Accessories',
     slug: 'accessories',
-    image: bag1,
+    image: aac5,
   },
-];
-
-const trustItems = [
-  { icon: Truck, title: 'Free Shipping', desc: 'On orders over GH₵600' },
-  { icon: RotateCcw, title: 'Easy Returns', desc: '30-day return policy' },
-  { icon: Shield, title: 'Secure Payment', desc: '100% secure checkout' },
-  { icon: Headphones, title: '24/7 Support', desc: 'Dedicated style support' },
 ];
 
 const heroSlides = [
@@ -87,6 +80,27 @@ const heroSlides = [
   {
     image: cover3,
     alt: 'Street style look',
+  },
+];
+
+const customerReviews = [
+  {
+    quote: 'Every piece feels considered, beautifully made, and easy to wear. Lunora has become my first stop for everyday dressing.',
+    name: 'Amelia R.',
+    detail: 'Verified customer',
+    rating: 5,
+  },
+  {
+    quote: 'The fit is impeccable and the quality is even better in person. I found the kind of wardrobe staples I will keep forever.',
+    name: 'Maya T.',
+    detail: 'Verified customer',
+    rating: 5,
+  },
+  {
+    quote: 'Thoughtful design, quick delivery, and pieces that make getting dressed feel effortless. A truly lovely experience.',
+    name: 'Sofia K.',
+    detail: 'Verified customer',
+    rating: 5,
   },
 ];
 
@@ -106,7 +120,7 @@ function StarRating({ rating }: { rating: number }) {
 export default function HomePage({ onNavigate }: HomePageProps) {
   const [bestSellers, setBestSellers] = useState<typeof mockProducts>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [trustIndex, setTrustIndex] = useState(0);
+  const [currentReview, setCurrentReview] = useState(0);
   const [email, setEmail] = useState('');
   const { user } = useAuth();
   const { isWishlisted, toggleWishlist } = useWishlist();
@@ -116,6 +130,13 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentReview((prev) => (prev + 1) % customerReviews.length);
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -159,7 +180,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </div>
 
               {/* Mini trust badges */}
-              <div className="flex flex-wrap gap-6 text-xs text-neutral-500">
+              {/* <div className="flex flex-wrap gap-6 text-xs text-neutral-500">
                 <span className="flex items-center gap-2">
                   <Truck className="w-4 h-4" /> Free Shipping
                 </span>
@@ -169,7 +190,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 <span className="flex items-center gap-2">
                   <Shield className="w-4 h-4" /> Secure Payment
                 </span>
-              </div>
+              </div> */}
             </motion.div>
 
             {/* Right image */}
@@ -394,63 +415,74 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* Trust bar */}
-      <section className="py-10 md:py-14 bg-beige/60">
+      {/* Customer reviews */}
+      <section className="py-10 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="relative overflow-hidden rounded-[2rem] bg-white shadow-sm p-6 md:p-8">
-            <div className="flex items-center justify-between mb-6">
+          <div className="grid overflow-hidden rounded-2xl bg-white/60 md:grid-cols-2">
+            <ScrollReveal className="flex min-h-[390px] flex-col justify-between p-8 md:min-h-[470px] md:p-12">
               <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-neutral-400 mb-2">Why shop with us</p>
-                <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900">Trusted by style seekers worldwide</h2>
+                <span className="text-[10px] uppercase tracking-[0.3em] text-neutral-400">From Our Community</span>
+                <h2 className="heading-serif mt-4 max-w-sm text-3xl font-semibold leading-tight text-neutral-900 md:text-4xl">
+                  Loved for the way you live.
+                </h2>
               </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setTrustIndex((prev) => (prev - 1 + trustItems.length) % trustItems.length)}
-                  className="h-11 w-11 rounded-full border border-neutral-200 bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setTrustIndex((prev) => (prev + 1) % trustItems.length)}
-                  className="h-11 w-11 rounded-full border border-neutral-200 bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
 
-            <div className="grid gap-6 md:grid-cols-3">
-              {trustItems.map((item, i) => (
-                <div
-                  key={item.title}
-                  className={`rounded-[1.5rem] border border-neutral-200 p-6 transition-all duration-500 ${
-                    i === trustIndex ? 'bg-emerald-50 shadow-lg scale-100' : 'bg-white/80 opacity-60 scale-95'
-                  }`}
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-700 mb-4">
-                    <item.icon className="w-5 h-5" />
-                  </div>
-                  <p className="text-lg font-semibold text-neutral-900 mb-2">{item.title}</p>
-                  <p className="text-sm text-neutral-600">{item.desc}</p>
+              <div key={currentReview} className="animate-fade-in-up">
+                <div className="mb-5 flex items-center gap-1">
+                  {Array.from({ length: customerReviews[currentReview].rating }).map((_, index) => (
+                    <Star key={index} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                  ))}
                 </div>
-              ))}
-            </div>
+                <blockquote className="heading-serif max-w-lg text-xl leading-relaxed text-neutral-800 md:text-2xl">
+                  “{customerReviews[currentReview].quote}”
+                </blockquote>
+                <div className="mt-6">
+                  <p className="text-sm font-medium text-neutral-900">{customerReviews[currentReview].name}</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.2em] text-neutral-400">{customerReviews[currentReview].detail}</p>
+                </div>
+              </div>
 
-            <div className="mt-6 flex items-center justify-center gap-2">
-              {trustItems.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setTrustIndex(index)}
-                  className={`h-2.5 w-2.5 rounded-full transition ${
-                    trustIndex === index ? 'bg-emerald-800' : 'bg-neutral-300'
-                  }`}
-                />
-              ))}
+              <div className="flex items-center justify-between pt-8">
+                <div className="flex gap-2" aria-label="Review slides">
+                  {customerReviews.map((review, index) => (
+                    <button
+                      key={review.name}
+                      onClick={() => setCurrentReview(index)}
+                      aria-label={`Show review ${index + 1}`}
+                      className={`h-px transition-all duration-300 ${index === currentReview ? 'w-8 bg-neutral-900' : 'w-4 bg-neutral-300'}`}
+                    />
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setCurrentReview((currentReview - 1 + customerReviews.length) % customerReviews.length)}
+                    aria-label="Previous review"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-colors hover:border-neutral-900 hover:text-neutral-900"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => setCurrentReview((currentReview + 1) % customerReviews.length)}
+                    aria-label="Next review"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-colors hover:border-neutral-900 hover:text-neutral-900"
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <div className="relative min-h-[320px] md:min-h-[470px]">
+              <img
+                src={cover1}
+                alt="Model wearing a Lunora look"
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover object-top"
+              />
             </div>
           </div>
         </div>
       </section>
-
       {/* Newsletter */}
       <section className="py-10 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">

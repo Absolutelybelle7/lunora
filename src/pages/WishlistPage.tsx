@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
 import { mockProducts } from '../lib/mockData';
 import ProductCard from '../components/ProductCard';
+import type { Product } from '../types';
 
 interface WishlistPageProps {
   onNavigate: (page: string) => void;
@@ -11,20 +12,19 @@ interface WishlistPageProps {
 export default function WishlistPage({ onNavigate }: WishlistPageProps) {
   const { user } = useAuth();
   const { wishlist } = useWishlist();
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<Product[]>([]);
 
   useEffect(() => {
     if (!user) return;
-    setItems(
-      wishlist
-        .map((id) => mockProducts.find((product) => product.id === id))
-        .filter(Boolean)
-    );
+    const matchingProducts = wishlist
+      .map((id) => mockProducts.find((product) => product.id === id) as Product | undefined)
+      .filter((product): product is Product => product !== undefined);
+    setItems(matchingProducts);
   }, [user, wishlist]);
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-ivory flex items-center justify-center px-4">
+      <div className="theme-page min-h-screen bg-ivory flex items-center justify-center px-4">
         <div className="rounded-3xl bg-white p-12 text-center shadow-premium">
           <h2 className="text-2xl font-semibold text-charcoal mb-4">Save pieces you love</h2>
           <p className="text-slate-500 mb-6">Sign in to add items to your wishlist and revisit them anytime.</p>
@@ -40,10 +40,10 @@ export default function WishlistPage({ onNavigate }: WishlistPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="theme-page min-h-screen bg-ivory">
       <div className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-semibold text-charcoal mb-2">Wishlist</h1>
+          <h1 className="heading-serif text-4xl font-semibold text-charcoal mb-2">Wishlist</h1>
           <p className="text-sm text-slate-500">Curated luxury pieces you’ve saved for later.</p>
         </div>
       </div>

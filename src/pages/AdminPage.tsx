@@ -25,12 +25,12 @@ export default function AdminPage({ onNavigate }: AdminPageProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="theme-page min-h-screen bg-ivory">
       <div className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-3xl font-semibold text-charcoal mb-2">Admin Dashboard</h1>
+              <h1 className="heading-serif text-4xl font-semibold text-charcoal mb-2">Admin Dashboard</h1>
               <p className="text-sm text-slate-500">Manage orders, products, customers, and site content.</p>
             </div>
             <button

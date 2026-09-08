@@ -15,6 +15,7 @@ import AccountPage from './pages/AccountPage';
 import WishlistPage from './pages/WishlistPage';
 import AdminPage from './pages/AdminPage';
 import About from './pages/About';
+import Preloader from './components/Preloader';
 
 type AppPage =
   | 'home'
@@ -29,46 +30,89 @@ type AppPage =
   | 'search'
   | 'product';
 
+interface RouteState {
+  page: AppPage;
+  searchQuery: string;
+  categorySlug: string;
+  productSlug: string;
+}
+
+function getRouteFromLocation(): RouteState {
+  const path = window.location.pathname.replace(/\/+$/, '') || '/';
+  const segments = path.split('/').filter(Boolean);
+  const query = new URLSearchParams(window.location.search);
+
+  if (segments[0] === 'product' && segments[1]) {
+    return { page: 'product', productSlug: segments[1], categorySlug: '', searchQuery: '' };
+  }
+
+  if (segments[0] === 'category' && segments[1]) {
+    return { page: 'shop', categorySlug: segments[1], productSlug: '', searchQuery: '' };
+  }
+
+  if (segments[0] === 'search') {
+    return { page: 'search', searchQuery: query.get('q') ?? '', categorySlug: '', productSlug: '' };
+  }
+
+  const page = segments[0] as AppPage | undefined;
+  const validPages: AppPage[] = ['home', 'shop', 'about', 'cart', 'checkout', 'auth', 'account', 'wishlist', 'admin'];
+
+  return {
+    page: page && validPages.includes(page) ? page : 'home',
+    searchQuery: '',
+    categorySlug: '',
+    productSlug: '',
+  };
+}
+
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<AppPage>('home');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categorySlug, setCategorySlug] = useState('');
-  const [productSlug, setProductSlug] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [route, setRoute] = useState<RouteState>(getRouteFromLocation);
+  const { page: currentPage, searchQuery, categorySlug, productSlug } = route;
 
   const navigateTo = (page: string, query?: string) => {
+    let nextRoute: RouteState;
+
     if (page.startsWith('product-')) {
-      setCurrentPage('product');
-      setProductSlug(page.replace('product-', ''));
-      setCategorySlug('');
-      setSearchQuery('');
-      return;
+      const slug = page.replace('product-', '');
+      nextRoute = { page: 'product', productSlug: slug, categorySlug: '', searchQuery: '' };
+    } else if (page.startsWith('category-')) {
+      const slug = page.replace('category-', '');
+      nextRoute = { page: 'shop', categorySlug: slug, productSlug: '', searchQuery: '' };
+    } else if (page === 'search') {
+      nextRoute = { page: 'search', searchQuery: query ?? '', productSlug: '', categorySlug: '' };
+    } else {
+      const validPages: AppPage[] = ['home', 'shop', 'about', 'cart', 'checkout', 'auth', 'account', 'wishlist', 'admin'];
+      const nextPage = validPages.includes(page as AppPage) ? page as AppPage : 'home';
+      nextRoute = { page: nextPage, productSlug: '', categorySlug: '', searchQuery: '' };
     }
 
-    if (page.startsWith('category-')) {
-      setCurrentPage('shop');
-      setCategorySlug(page.replace('category-', ''));
-      setProductSlug('');
-      setSearchQuery('');
-      return;
-    }
+    const path = nextRoute.page === 'product'
+      ? `/product/${nextRoute.productSlug}`
+      : nextRoute.page === 'shop' && nextRoute.categorySlug
+        ? `/category/${nextRoute.categorySlug}`
+        : nextRoute.page === 'search'
+          ? `/search${nextRoute.searchQuery ? `?q=${encodeURIComponent(nextRoute.searchQuery)}` : ''}`
+          : nextRoute.page === 'home' ? '/' : `/${nextRoute.page}`;
 
-    if (page === 'search') {
-      setCurrentPage('search');
-      setSearchQuery(query ?? '');
-      setProductSlug('');
-      setCategorySlug('');
-      return;
-    }
-
-    setCurrentPage(page as AppPage);
-    setProductSlug('');
-    setCategorySlug('');
-    setSearchQuery('');
+    window.history.pushState(null, '', path);
+    setRoute(nextRoute);
   };
+
+  useEffect(() => {
+    const handlePopState = () => setRoute(getRouteFromLocation());
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage, categorySlug, productSlug, searchQuery]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsLoading(false), 1200);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -103,6 +147,7 @@ export default function App() {
     <AuthProvider>
       <CartProvider>
         <WishlistProvider>
+          {isLoading && <Preloader />}
           <div className="min-h-screen bg-cream text-charcoal">
             <Header onNavigate={navigateTo} currentPage={currentPage} />
             <main className={currentPage === 'home' ? '' : 'pt-20'}>{renderPage()}</main>

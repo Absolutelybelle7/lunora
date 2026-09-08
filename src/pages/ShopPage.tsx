@@ -3,6 +3,7 @@ import { SlidersHorizontal, X, Grid, List } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { mockProducts, mockCategories } from '../lib/mockData';
 import { formatPrice } from '../lib/currency';
+import type { Category, Product } from '../types';
 
 interface ShopPageProps {
   onNavigate: (page: string) => void;
@@ -10,8 +11,8 @@ interface ShopPageProps {
 }
 
 export default function ShopPage({ onNavigate, categorySlug }: ShopPageProps) {
-  const [products, setProducts] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -33,7 +34,7 @@ export default function ShopPage({ onNavigate, categorySlug }: ShopPageProps) {
 
   useEffect(() => {
     if (categorySlug) {
-      setFilters({ ...filters, category: categorySlug });
+      setFilters((currentFilters) => ({ ...currentFilters, category: categorySlug }));
     }
   }, [categorySlug]);
 
@@ -54,7 +55,7 @@ export default function ShopPage({ onNavigate, categorySlug }: ShopPageProps) {
 
     if (filters.category) {
       const normalized = filters.category.toLowerCase();
-      const category = categories.find(c => c.slug === normalized);
+      const category = mockCategories.find(c => c.slug === normalized);
       if (category) {
         filtered = filtered.filter(p => p.category_id === category.id);
       } else if (normalized === 'sale') {
@@ -138,10 +139,10 @@ export default function ShopPage({ onNavigate, categorySlug }: ShopPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="theme-page min-h-screen bg-cream">
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Shop</h1>
+          <h1 className="heading-serif text-4xl font-semibold text-neutral-900 mb-2">Shop</h1>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <button onClick={() => onNavigate('home')} className="hover:text-black">Home</button>
             <span>/</span>
@@ -159,7 +160,7 @@ export default function ShopPage({ onNavigate, categorySlug }: ShopPageProps) {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           <aside className={`lg:w-64 ${showFilters ? 'block' : 'hidden lg:block'}`}>
-            <div className="bg-white rounded-lg p-6 shadow-sm sticky top-24">
+            <div className="bg-white rounded-2xl p-6 shadow-sm sticky top-24">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-semibold text-gray-900">Filter Options</h3>
                 <button onClick={() => setShowFilters(false)} className="lg:hidden">
@@ -257,7 +258,7 @@ export default function ShopPage({ onNavigate, categorySlug }: ShopPageProps) {
           </aside>
 
           <main className="flex-1">
-            <div className="bg-white rounded-lg p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="bg-white rounded-2xl p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowFilters(true)}

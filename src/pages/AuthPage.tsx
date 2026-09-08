@@ -44,24 +44,24 @@ export default function AuthPage({ onNavigate }: AuthPageProps) {
           onNavigate('home');
         }
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+    <div className="theme-page min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full">
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-12 h-12 bg-emerald-800 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-2xl">B</span>
+              <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
+                <span className="text-white heading-serif font-bold text-2xl">L</span>
               </div>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            <h2 className="heading-serif text-3xl font-semibold text-gray-900 mb-2">
               {isSignUp ? 'Create Account' : 'Welcome Back'}
             </h2>
             <p className="text-gray-600">

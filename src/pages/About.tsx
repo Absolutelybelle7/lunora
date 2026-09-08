@@ -30,14 +30,14 @@ const reviews: Review[] = [
 
 export default function About() {
   return (
-    <div className="pt-24 px-4 max-w-7xl mx-auto">
+    <div className="theme-page pt-24 px-4 max-w-7xl mx-auto pb-16">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="text-center mb-12"
       >
-        <h1 className="text-4xl font-bold text-gray-800">About Us</h1>
+        <h1 className="heading-serif text-4xl font-semibold text-neutral-900">About Us</h1>
         <p className="mt-4 text-lg text-gray-600">
           At Luxe Bonnets, we believe in providing high-quality hair care products that enhance your beauty and confidence.
         </p>
@@ -47,7 +47,7 @@ export default function About() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg shadow-lg p-6 mb-8"
+        className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-8"
       >
         <h2 className="text-2xl font-semibold mb-4">Our Story</h2>
         <p className="text-gray-700 mb-4">
@@ -63,7 +63,7 @@ export default function About() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg shadow-lg p-6 mb-8"
+        className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-8"
       >
         <h2 className="text-2xl font-semibold mb-4">Customer Reviews</h2>
         <div className="space-y-4">
@@ -81,7 +81,7 @@ export default function About() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg shadow-lg p-6"
+        className="bg-white rounded-2xl shadow-lg p-6 md:p-8"
       >
         <h2 className="text-2xl font-semibold mb-4">Connect with Us</h2>
         <p className="text-gray-700 mb-4">

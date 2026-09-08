@@ -1,19 +1,9 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import { mockProducts } from '../lib/mockData';
+import type { CartItem } from '../types';
 
-interface CartItem {
-  id: string;
-  product_id: string;
-  variant_id: string | null;
-  quantity: number;
-  price: number;
-  product: {
-    name: string;
-    images: string[];
-    slug: string;
-  };
-}
+type PersistedCartItem = Omit<CartItem, 'product'>;
 
 interface CartContextType {
   items: CartItem[];
@@ -48,9 +38,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       const cartData = localStorage.getItem(`cart_${user.id}`);
       if (cartData) {
-        const parsedCart = JSON.parse(cartData);
+        const parsedCart = JSON.parse(cartData) as PersistedCartItem[];
         // Fetch product details from mock data
-        const enrichedItems = parsedCart.map((item: any) => {
+        const enrichedItems = parsedCart.map((item) => {
           const product = mockProducts.find(p => p.id === item.product_id);
           if (product) {
             return {
@@ -63,7 +53,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             };
           }
           return null;
-        }).filter(Boolean);
+        }).filter((item): item is CartItem => item !== null);
         setItems(enrichedItems);
       }
     } catch (error) {
